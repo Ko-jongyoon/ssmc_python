@@ -25,4 +25,18 @@
  > python Django or Flask
  > 웹 환경 이해 (클라이언트 <-> 서버), OSI 7 Layer(통신에 
    대한 간략한 흐름)
-   
+
+3. 데이터베이스
+  >RDBMS <->No SQL
+  >RDBMS: 관계형 데이터 베이스 관리 시스템
+   엔터급:오라클, MSSSQL, 오로라, ...
+   개발급:mysql,마이라, ...
+   => SQL 공부해서 데이터를 쿼리수행(query) 하여 조작
+   조작(데이터 추가, 삭제, 수정, 조회) : CRUD
+ ========================================
+  > No SQL:JSON ,로그, 빅데이터등등...
+    몽고DB, ...
+  > 파이썬에서 mysql access 및 쿼리 수행
+    flask 자체 모듈도 있고, mysql 전용 담당 모듈도 존재한다..
+    여기서는 pymysql을 사용하겠다
+    pip install pymysql

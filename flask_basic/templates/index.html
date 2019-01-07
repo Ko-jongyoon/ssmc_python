@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+        <body>
+            {{ items }}
+            <table border="1">
+                <thead>
+                    <!-- 한 줄-->
+                    <tr>
+                        <!-- 한 칸-->
+                        <th>랭킹</th>
+                        <th>국가</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- tr 구간이 반복해서 데이터를 표현할 구간이다-->
+                    {# 딕셔너리값을 get으로 획득할 경우 누락시 None 출력 #}
+                    {# 클라이언트에게 보이면 않되는 주석, 숨겨야 할 주석#}
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item ['rank']}}</td>
+                            <td>{{ item ['national']}}</td>
+                        </tr>
+                    {% endfor %}    
+                </tbody>
+            </table>          
+
+        </body>
+</html>

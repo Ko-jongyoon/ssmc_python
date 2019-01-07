@@ -9,12 +9,14 @@
 1. HTML5 : 콘텐츠를 가지고 있다, 구조를 가지고 있다, 뼈대, 콘텐츠
 2. CSS3  : 레이아웃을 담당, 프리젠테이션, 데코레이션, 디자인, 애니메이션
 3. JS    : 오퍼레이션 담당, 인터렉션(사용자와 주고받기)
-           이벤트처리, 통신처리, 동적페이지 구성
+           이벤트처리( 통신처리(ajax), 동적페이지(DHTML,DOM) 구성)
            js르르 중심으로 웹페이지를 만드는 기술
            앵귤러js(구글), ReactJS(페이스북), Vue(뷰에:개발자커뮤니티) 
+           or
+           javascript 프레임웍 => JQuery
 '''
 ###########################################################
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
 
@@ -39,7 +41,11 @@ def loginproc():
     upw =request.args.get('upw') 
     if uid == 'm' and upw == '1':
         # 회원이면 => 반갑습니다 m님
-        return '반갑습니다 %s님' % uid
+        # return '반갑습니다 %s님' % uid
+        # 요청에 대해 바로 응답하지않고 다른페이지로 요청을 던진다
+        #  =>redirect
+        # 세션 생성 => 로그인했음을 인지하는 방법, 사용자 정보 저장하는용도
+        return redirect('/main')
     else:
         # 회원아니면 => 아이디나 비번을 확인해주세요.
         return '''
@@ -49,6 +55,17 @@ def loginproc():
         </script>
         '''
        
-    
+       #return uid +upw
+
+
+#메인 서비수 화면 ~/main
+#화면 내용은 그냥 서비스
+@app.route('/main')
+def main(): 
+    # 로그인을 해야지만 진입할 수 있는 페이지이다 (원래)
+    # 로그인 여부를 판단할 수 있어야 거를 수 있다 => 세션
+    return "서비스"
+
+
 if __name__ == '__main__':# 이코드를 메인으로 구동시 서버가동
     app.run(debug=True)

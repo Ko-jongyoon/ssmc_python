@@ -53,9 +53,9 @@ def cal(nums):
         # 합산이니까 데이터는 숫자로만 넣으시오
     return '합: %s' % addSum
 
-# URL 주소 사이에다가 동적 파라미터 가능한가?
+# URL 주소 사이에다가 동적 파라미터 가능한가? -> 가능하다
 @app.route('/users/login/<uid>/etc')
-def login(uid):
+def login2(uid):
     return 'login page %s' %uid
 
 

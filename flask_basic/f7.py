@@ -33,13 +33,15 @@ def test():
     return name
 # 요청 주소
 # http://127.0.0.1:5000/login?uid=가나다&upw=1234
-# 화면에 아이디와 비번을 출력하는 해당 페이지를 구성하시오1
+# 화면에 아이디와 비번을 출력하는 해당 페이지를 구성하시오
 @app.route('/login')
 def login():
     uid =request.args.get('uid')
+    # 이렇게도 데이터를 획득할 수 있으나 부재시 오류발생
     upw =request.args.get('upw') 
-    print(uid, upw)
-    return uid + upw
+    print(uid)
+    print(upw)
+    return ""
 
 
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--html문서는 html로 시작해서 html로 끝난다-->
+<html>
+    <!-- 헤더 : 메타 정보(문서를 기술하는 정보)-->
+    <head></head>
+    <!-- 바디 : 화면에 보이는 내용 기술-->
+    <body>
+        <h2>로그인</h2>
+        <!--html에서 사용자 입력을 받는 태그 =input 
+        이때 데이터의 키에 해당되는 속성은 name
+        아래같이 하나로 구성된 태그 뒤에 / 붙인케이스 -> 단독태그
+        form : 전송의 행위를 담당, 폼안에 있는 input 들을 읽어서 전달
+    --> 
+
+        <form action="/login" method="POST">
+            <input type="text" name='uid' placeholder="아이디" required autofocus/ />
+            <!--줄바꿈-->
+            <br/>
+            <input type="password" name='upw' placeholder="비밀번호" required autofocus/ />
+            <br>
+            <input type="submit" value='로그인'/>
+        </form>
+    </body>
+</html>

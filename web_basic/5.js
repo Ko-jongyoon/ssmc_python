@@ -19,7 +19,7 @@ function sum( x,y )
 // 익명 함수 => 이름이 없다(함수 이름)=> 1화요으 콜백용으로만 단 한번 사용
 var sum2 = function ( x,y )
 {
-    return x+y;
+    return x+y; 
 }
 //$(document.read( function(){
 

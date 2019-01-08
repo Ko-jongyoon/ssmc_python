@@ -1,0 +1,36 @@
+
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+            $(document).ready( function cb(){
+            } );
+        </script>
+    </head>
+    <body>
+        <!-- css selector 기본 -->
+        <p>abc</p>
+        <div>123</div>
+        <span id ='mul' class='s1'>567</span>
+        <div class='s1'>894</div>
+        <script>
+              // * : 모든 요소를 의미
+              // 찾아서(selector) 조작해라(여기서는 디자인적인 속성)
+              // 이 문서의 모든 text 색상을 red로 적용해라
+              $('*').css('color','red');
+              // 요소명 : 문서상에 존재하는 모든 요소를 찾을때 사용 =>list로 사용
+              $('div').css('color','blue');
+              // #id : 문서상에 고유한 속성. 즉, 특정값은 한 요소에만 적용된다
+              //      문서상에서 id값은 고유하다
+              $('#mul').css('color','pink');
+              // .클래스명 : class를 의미한 .class는 여러요소에 공통된 스타일을 적용
+              //     할때 사용하는 속성 
+              $('.sl').css('color','black');
+              // 조합1 : 요소명#아이디, 요소명.class명
+              // div 요소들중에 class가 s1인 요소만 찾아서글자색을 yellow
+              $('div.s1').css('color','yellow');
+              // 열거 : 찾고싶은 대상을 나열한다 ,를 구분으로
+              $('p,span,div.s1').css('color','green');
+        </script>
+    </body>
+</html>

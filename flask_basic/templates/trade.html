@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     </head>
+        <body>
+            {# 검색창 #}
+            <div>
+                <fieldset>
+                    <form method="post">
+                        <input type='text' name='keyword' placeholder="종목이름으로 검색"
+                        autofocus/>
+                        <input type='submit' value ="검색"/>
+                    </form>
+                    {# 검색 결과는 id가 result인 요소의 자식으로 들어간다#}
+                    <div id="result">
+                        
+                    </div>
+                </fieldset>  
+            </div>
+
+            <div>
+                <table border="1" cellspacing="0" width='100%'>
+                    <caption>주식 목록</caption>
+                    <thead>
+                        {# 컬러명: 코드 : 이름 : 현재가 : 상한가 : 최저가 #}
+                        <tr>
+                            <th>코드</th>
+                            <th>이름</th>
+                            <th>현재가</th>
+                            <th>상한가</th>
+                            <th>최저가</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for trade in trades %}
+                            <tr>
+                                <td>{{ trade ['code']}}</td>
+                                <td>{{ trade ['name']}}</td>
+                                <td>{{ trade ['cur']}}</td>
+                                <td>{{ trade ['high']}}</td>
+                                <td>{{ trade ['row']}}</td>
+                            </tr>
+                        {% endfor %}    
+            </div>
+                    </tbody>
+                </table>          
+        <script>
+            // 의사 결정 selector
+            // tr들 중에서 첫째
+            // 이 문서상에 존재한 모든 tr을 모아서 그중에 첫째
+            $('tr:first').css('color','red');
+            // 동화약품의 배경색을 다른색으로
+            // 이 문서상에 존재하는 주식 정보를 가진 tr들을
+            // 다모아서 그중에 첫째
+            // tbody 밑에 직계자식 모든 tr
+            $('tbody > tr:first').css('background','lightgreen');
+            // 막내
+            $('tbody > tr:last').css('background','lightgreen');
+            // 짝수번 even <-> odd
+            $('tbody > tr:even').css('background','skyblue');
+                
+        </script>
+        </body>
+</html>

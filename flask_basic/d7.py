@@ -78,9 +78,110 @@ def selectTradeData():
             connection.close()
     return rows
 
+# 키워드를 이용하여 이름에 해당 키워드가 포함된 주식 목록을 리턴한다
+def selectStockByKeyword( keyword ):
+    connection = None
+    rows       = None # 주식정보들을 담는 변수
+    try:
+        connection = my.connect(host='localhost', # 디비 주소
+                            user='root',      # 디비 접속 계정
+                            password='12341234', # 디지 접속 비번
+                            db='python_db',   # 데이터베이스 이름
+                            #port=3306,        # 포트     
+                            charset='utf8',
+                            cursorclass=my.cursors.DictCursor) # 커서타입지정
+        # 쿼리수행
+        with connection.cursor() as cursor:            
+            sql    = '''
+                select 
+                    code, name, cur, high, low 
+                from 
+                    tbl_trade 
+                where 
+                    name like '%%%s%%';
+            ''' % keyword
+            cursor.execute( sql )
+            # 여러개 데이터를 다 가져올때
+            rows    = cursor.fetchall()            
+    except Exception as e:
+        print('->', e)
+        rows = None
+    finally:
+        if connection:
+            connection.close()
+    return rows
+
+# code를 이용하여 해아 종목 정보를 모두 가져온다
+def selectOneStockInfo( code ):
+    connection = None
+    row = None # 로그인 결과를 담는 변수
+    try:
+        connection = my.connect(host='localhost', # 디비 주소
+                            user='root',      # 디비 접속 계정
+                            password='12341234', # 디지 접속 비번
+                            db='python_db',   # 데이터베이스 이름
+                            #port=3306,        # 포트     
+                            charset='utf8',
+                            cursorclass=my.cursors.DictCursor) # 커서타입지정
+        with connection.cursor() as cursor:
+            sql    = "select * from tbl_trade where code=%s;"
+            cursor.execute( sql, (code,) )
+            row    = cursor.fetchone()        
+    except Exception as e:
+        print('->', e)
+        row = None
+    finally:
+        if connection:
+            connection.close()
+    return row
+
+# 수정하기 : 코드를 이용하여 cur,rate를 변경한다
+# 변경의 성공 여부는 영향을 받은(e) row의 수가 1이상일경우 해당된다
+# stock : 타입이 dict, 키는 컬럼명을 따라간다
+def updateStockInfo( stock ):
+    connection = None
+    result = None # 수정 결과
+    try:
+        connection = my.connect(host='localhost', # 디비 주소
+                            user='root',      # 디비 접속 계정
+                            password='12341234', # 디지 접속 비번
+                            db='python_db',   # 데이터베이스 이름
+                            #port=3306,        # 포트     
+                            charset='utf8',
+                            cursorclass=my.cursors.DictCursor) # 커서타입지정
+        with connection.cursor() as cursor:
+            sql    = '''update tbl_trade 
+            set cur=%s, rate=%s 
+            where code=%s; 
+            '''
+            cursor.execute( sql, (stock['cur'],stock['rate'],stock['code']) )
+        # 커밋 수행 => 실제 디비에 반영 시켜라
+        # update, delete, insert 다 해당됨
+        connection.commit()
+        #영향을 받은 row의 수를 반환해라
+        result =connection.affected_rows()   
+    except Exception as e:
+        print('->', e)
+        result = 0
+    finally:
+        if connection:
+            connection.close()
+    return result
+
 # 테스트코드-> 이코드를 직접 구동할대만 작동되어야한다
 if __name__ == '__main__':
-    print( '=>', loginSql( 'm', '1' ) )
-    rows = selectTradeData()
-    if rows:print( rows)
-    else:   print('데이터가 없다')
+    # print( '=>', loginSql( 'm', '1' ) )
+    # rows = selectTradeData()
+    # if rows:print( rows)
+    # else:   print('데이터가 없다')
+    # print('='*100)
+    # print( selectStockByKeyword('현') )
+    # print( selectOneStockInfo('012330') )
+    # for a,b in selectOnStockInfo('012330');
+    #     print(a,b)
+    dic = {
+        'cur':'3',
+        'rate':'3.1',
+        'code':'012330'
+    }   
+    print("성공" if updateStockInfo(dic) else '실패')

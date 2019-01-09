@@ -7,3 +7,14 @@ addSum = 0
 for n in datas:
      addSum += int(n)
      print(addSum)
+
+# 퐆맷팅에서 %를 인식하게 하려면 %%를 사용한다
+sql   = '''
+     select 
+               name, code, cur, high, low 
+          from 
+               tbl_trade
+          where 
+               name like'%%%s%%'
+     '''
+print( sql % '삼')

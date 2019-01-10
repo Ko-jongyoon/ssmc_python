@@ -168,6 +168,37 @@ def updateStockInfo( stock ):
             connection.close()
     return result
 
+
+# 삭제하기
+def deleteStockInfo( code ):
+    connection = None
+    result = None # 수정 결과
+    try:
+        connection = my.connect(host='localhost', # 디비 주소
+                            user='root',      # 디비 접속 계정
+                            password='12341234', # 디지 접속 비번
+                            db='python_db',   # 데이터베이스 이름
+                            #port=3306,        # 포트     
+                            charset='utf8',
+                            cursorclass=my.cursors.DictCursor) # 커서타입지정
+        with connection.cursor() as cursor:
+            sql    = '''delete from tbl_trade where code=%s; 
+            '''
+            cursor.execute( sql, (code) )
+        # 커밋 수행 => 실제 디비에 반영 시켜라
+        # update, delete, insert 다 해당됨
+        connection.commit()
+        #영향을 받은 row의 수를 반환해라
+        result =connection.affected_rows()   
+    except Exception as e:
+        print('->', e)
+        result = 0
+    finally:
+        if connection:
+            connection.close()
+    return result
+
+
 # 테스트코드-> 이코드를 직접 구동할대만 작동되어야한다
 if __name__ == '__main__':
     # print( '=>', loginSql( 'm', '1' ) )
@@ -179,9 +210,10 @@ if __name__ == '__main__':
     # print( selectOneStockInfo('012330') )
     # for a,b in selectOnStockInfo('012330');
     #     print(a,b)
-    dic = {
-        'cur':'3',
-        'rate':'3.1',
-        'code':'012330'
-    }   
-    print("성공" if updateStockInfo(dic) else '실패')
+    # dic = {
+    #     'cur':'3',
+    #     'rate':'3.1',
+    #     'code':'012330'
+    # }   
+    # print("성공" if updateStockInfo(dic) else '실패')
+    print (deleteStockInfo('000020'))

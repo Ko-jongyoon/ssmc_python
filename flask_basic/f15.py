@@ -10,7 +10,7 @@
 #       종목 리스트를 구해서(SQL) -> 브라우저로 전송하면(JSON 방식전송)
 #       동적으로 화면(DOM)에 뿌린다
 #       ajax : 화면이 껌벅이지 않고 뒷단(백그라운드)에서 통신을 진행하는 기술
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for, redirect
 #from d7 import selectTradeData, selectStockByKeyword as ssbk
 # 모듈 밑에 모든 함수, 변수, 클레스등등 가져올려면 *를 표시한다
 from d7 import *
@@ -53,6 +53,42 @@ def info( code ):
     print( "업데이트 여부", request.args.get('update'))
     return render_template('info.html', trade=selectOneStockInfo(code),
                                         update=request.args.get('update') )
+
+
+# 종목 정보 수정하기
+# 수정이 성공하면 -> /info/code 화면으로
+# 수정이 실패하면 -> 경고창 -> 되돌아가기
+@app.route('/updateStock',methods=['POST'])
+def updateStock():
+    # 1. 파라미터 획득
+    # ImmutableMultiDict([('cur', '3123'), ('rate', '123')])
+    # print( request.form )
+    # 2. 쿼리수행
+    # 3. 수행 결과 판단
+    if updateStockInfo(request.form):
+       # 수정이 성공하면 ->/info/code 화면으로
+       return render_template('error.html', msg="수정완료",
+                                url=url_for('info', code=request.form['code']) )
+                                #url="/info/"+request.form['code'])
+    else:   
+       # 수정이 실패하면 -> 경고창 -> 되돌아가기
+       return render_template('error.html', msg='수정실패')
+    #return "%s" % updateStockInfo( request.form )
+
+#종목 삭제하기
+@app.route('/deleteStock')
+def deleteStock():
+    # 파라미터 획득
+    code =request.args.get('code')
+    # 삭제 처리
+    if deleteStockInfo( code ):
+        # 홈페이지로 이동
+        return render_template('error.html', msg="삭제완료",
+                                url=url_for('home'))
+        #return redirect( url_for('home'))
+    else:
+        return render_template('error.html', msg="삭제실패")
+
 
 if __name__=='__main__':# 이코드를 메인으로 구동시 서버가동
     app.run(debug=True)

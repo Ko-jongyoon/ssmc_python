@@ -55,7 +55,7 @@
             // 그리고나서 , ajax 구현하여 검색 API 호출하여 응답 받으면 된다.
             // ajax : 비동기 통신 원래 XML을 주고받기 위해서 만들어졌으나,
             // 지금은 Json을 주고받는데 더 많이 사용된다
-            //xml, json은 텍스트 파일이고, 이기종간에 데이터 포맷으로 사용된다
+            //xml, json은 텍스트 파일이고, 이기종간에 데이터 포맷으로 (사용된다
             var keyword = 'keyword='+$('[name=keyword]').val();
             //$.post -> $.ajax 를 post로 쓴다
             $.ajax( {
@@ -83,7 +83,7 @@
                 // 검색어 획득
                 const keyword = $('[name=keyword]').val();
                 // 신규결과를 추가한다
-                $.each( data, (idx, item)=>{
+                $.each( data, (idx, item)=>{  // 한 덩이(data) 씩 끄집어 내고 item은 딕셔너리고 idx 인덱스
                     // console.log(idx,item)
                     var html = `<li>${item.name} (${item.code})</li>`;
                     // 검색어를 종목이름에서 강조시킨다

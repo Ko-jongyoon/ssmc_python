@@ -1,50 +1,66 @@
 <html>
 <head></head>
 <body>
-    <div>
-        <h2>주식정보 ({{trade['name']}})</h2>
-        <h3>
-            <!-- 링크
-            1. 정보를 보는 화면에서는 수정하기 링크
-            2. 수정하는 화면에서는 실제 수정하는 액션이 진행 되야 한다.
-               이름은 수정으로
-            -->
-            {%  if  update=='Y':  %}
-            <button onclick = 'history.back();'>뒤로가기</button>
-            <a href='/updateStock'>수정</a>
-            {%  else  %}
-            <a href='?update=Y'>수정하기</a>
-            {%  endif %}
-            <a href='/deleteStock?code={{trade["code"]}}'>삭제하기</a>
-            <a href='/insertStock'>종목추가</a>
-        </h3>
-    </div>
-    <div>
-        <table border="1" cellspacing="0" width='100%'>
-            {#
-               - cur(현재가), rate만 수정이 가능하다(가정)
-               - 수정하는 화면에서는 입력창에 현재최종 정보가 표시된다
-                 input 태그사용, type은 number가 적합(text로 가정)
-                 => 전체를 일단 input 안으로 넣겠다
-               - 사용자는 수치값을 변경할 수 있다
-               - 값을 변경후 수정 버튼을 누르면 수정된다(/updateStock)
-                 post방식 사용
-               - 수정 후 다시 미리보기 화면으로 오고, 이때 데이터를
-                 다시 읽어와서 수정된 최종 정보로 표시한다
-            
-             #}
-            {%for key in trade:%}
-                <tr>
-                    <td>{{key}}</td>
-                    
-                    <td>
-                        <input type='text' name='{{key}}' value="{{trade[key]}}"
-                        {{'' if key == 'cur' or key =='rate' else "disabled" }}/> 
-                   </td>
+    <form action="/updateStock" method="post">
+        <div>
+            <h2>주식정보 ({{trade['name']}})</h2>
+            <h3>
+                <!-- 링크
+                1. 정보를 보는 화면에서는 수정하기 링크
+                2. 수정하는 화면에서는 실제 수정하는 액션이 진행 되야 한다.
+                이름은 수정으로
+                -->
+                {%  if  update=='Y':  %}
+                <button onclick = 'history.back();'>뒤로가기</button>
+                <!-- <a href='/updateStock'>수정</a> -->
+                <input type="hidden" name="code" value="{{trade['code']}}"/>
+                <input type ="submit" value="수정"/>
+                {%  else  %}
+                <a href='?update=Y'>수정하기</a>
+                {%  endif %}
+                <!-- 태그 속성에 js를 직접 기술하는 방식 : inline 방식 -->
+                <a href='#' onclick="onDelet();">삭제하기</a>
+                <script>
+                    function onDelet()
+                    {
+                        if( confirm('삭제하시겠습니까?') ){
+                        document.location.href="/deleteStock?code={{trade['code']}}"
+                        }
+                        
+                    }
+                </script>
+                <a href='/insertStock'>종목추가</a>
+            </h3>
+        </div>
+        <div>
+            <table border="1" cellspacing="0" width='100%'>
+                {#
+                - cur(현재가), rate만 수정이 가능하다(가정)
+                - 수정하는 화면에서는 입력창에 현재최종 정보가 표시된다
+                    input 태그사용, type은 number가 적합(text로 가정)
+                    => 전체를 일단 input 안으로 넣겠다
+                - 사용자는 수치값을 변경할 수 있다
+                - 값을 변경후 수정 버튼을 누르면 수정된다(/updateStock)
+                    post방식 사용
+                - 수정 후 다시 미리보기 화면으로 오고, 이때 데이터를
+                    다시 읽어와서 수정된 최종 정보로 표시한다
                 
-                </tr>
-            {% endfor %}    
-        </table>
-    </div>
+                #}
+                {%for key in trade:%}
+                    <tr>
+                        <td>{{key}}</td>
+                        
+                        <td>
+                            {# 현재화면이 수정하기 화면이면서 컬럼이 cur 혹은 rate인 경우#}
+                            
+                            <input type='text' name='{{key}}' value="{{trade[key]}}"
+                            {{'' if key == 'cur' or key =='rate' else "disabled" }}/> 
+                    </td>
+                    
+                    </tr>
+                {% endfor %}    
+            </table>
+        </div>
+    </form>
 </body>
 </html>

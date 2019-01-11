@@ -1,0 +1,43 @@
+<div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">파일 업로드 테스트</h1>
+        </div> 
+        <!-- /.col-lg-12 -->
+        <!-- 파일 업로드 폼-->
+        <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        파일업로드
+                    </div>
+                    <div class="panel-body">
+                        <fieldset>
+                            <form method="POST" enctype="multipart/form-data">
+                                <!-- 제목 -->
+                                <input class= "form-control"  type ="text" name="title" placeholder="제목"/>
+                                <!-- 내용 -->
+                                <textarea  class= "form-control" name="content" cols="30" rows="10" placeholder="내용"></textarea>
+                                <!-- 작성자(데이터 숨어서 전달 자동)-->
+                                <!-- <input type="hidden" name="author" value=""> -->
+                                <!-- 작성일(디비에서 자동)-->
+                                <!-- 파일-->
+                                <input  class= "form-control" type="file" multiple="multiple" name="fileData" placeholder="파일첨부">
+                                <input class ="btn btn-primary" type="submit" value="업로드">
+                            </form>
+                        </fieldset>
+                    </div>
+                </div>
+        </div>
+        
+        <!-- 파일 업로드 된 리스트 화면-->
+        <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        자료실 게시판
+                    </div>
+                    <div class="panel-body">
+                        내용
+                    </div>
+                </div>
+        </div>
+          
+</div>

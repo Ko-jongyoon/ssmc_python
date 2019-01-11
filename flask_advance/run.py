@@ -15,6 +15,7 @@
 # 디비나, 서드파트 솔류션을 이용하여 처리한다.
 from flask import Flask, render_template ,url_for, request, redirect, session, jsonify
 from db.sql import *
+import os
 app = Flask(__name__)
 app.secret_key= 'qweasdzxc'
 
@@ -22,7 +23,8 @@ app.secret_key= 'qweasdzxc'
 config= {
     'site_title':'점심 메뉴 단가 분석',
     'menu1':'Today`s 코스닥 150',
-    'login':'로그인'
+    'login':'로그인',
+    'menu2':'파일업로드'
 }
 @app.route('/')
 def home():
@@ -43,7 +45,7 @@ def search():
     else:
         # 실패:검색 결과가 없으면 json의 다른 형태로 ㅍ응답
         return jsonify( [] )
-        
+
 @app.route('/logout')
 def logout():
     # 세션 제거
@@ -77,6 +79,66 @@ def login():
 def tradeList():
     return render_template('sub/tradeList.html', config=config, 
                                                 trades=selectTradeData())
+# 파일 업로드
+@app.route('/uploadPhoto', methods=['GET','POST'])
+def uploadPhoto():
+    if request.method =='GET':
+        return render_template('sub/uploadPhoto.html', config=config )
+    else:
+        # 딕셔너리 구조로
+        # 디비에 들어갈 데이터를 준비
+        dic = dict()      
+        
+        # 전달된 데이터를 콘솔에 출력한다( 작성자 아이디 포함 )
+        print( request.form['title'] )
+        print( request.form['content'] )
+        print( session['user_id'] )
+        # 파일 저장 처리
+        # 파일 1개 보냈을때
+        # f = request.files['fileData']
+        # print (type(f), f)
+        # 파일을 n개 multiple일 경우
+        tmp = list()
+        for f in request.files.getlist('fileData'):
+            # 2.파일 저장 처리
+            print ( type(f), f.filename)
+            # 윈도우던, 리눅스던 경로가 알아서 적용되게 구현해야 한다
+            # 어디다가 저장할것인가? => 정적 url을 제공하는 위치
+            # ~/static/upload
+            # 사용자별로 구분 -> 아이디를 폴더로 or 파일명에 아이디를붙이기
+            # 동일 파일 구분 -> 사건을 추가 
+            # 궁극적인 해결방안 => 중복되지않는 해시값(32바이트)으로 이름변경
+            path = os.path.join(os.getcwd(), 'static','upload', f.filename)
+            # 디스크상 저장 위치
+            #'C:\Users\rhwhd\Desktop\github\ssmc_python\flask_advance\static\upload\coffea.jpg
+            # 웹경로상
+            # http://127.0.0.1:5000/static/upload/coffea.jpg
+            # 저장 위치는 무조건 ~/static/upload/ 고정이다
+            # 그렇다면 저장은 파일명만
+            # a.jpg[b.jpg]c.jpg.....
+            print ( path )
+            f.save(path);
+            # 파일명 추가
+            tmp.append(f.filename)
+            # 디비에 입력된 파일 정보를 출력하시오
+            # 어떤 정보만 디비에 들어가면 되는지 고민해서 출력
+        dic['title'] =request.form['title']
+        dic['content'] =request.form['content']
+        dic['author'] =session['user_id']
+        dic['files']  = '|'.join(tmp)
+        print(dic)
+        '''
+        {'title:'1',
+         'content':'2',
+         'author': 'm',
+         'files:'coffea.jpg|summer.jpg|summer2.jpg|summer3.jpg
+        }
+        '''
+        # 3.디비 입력 처리
+        # 3-1. 성공이면 저장되었습니다. -> 리스트로 이동
+        # 3-2. 실패면 실패했습니다 -> 돌아가기
+        return "파일 업로드 처리"
+    
 if __name__ == '__main__':# 이코드를 메인으로 구동시 서버가동
     app.run(debug=True)
     

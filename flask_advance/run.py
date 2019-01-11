@@ -83,7 +83,9 @@ def tradeList():
 @app.route('/uploadPhoto', methods=['GET','POST'])
 def uploadPhoto():
     if request.method =='GET':
-        return render_template('sub/uploadPhoto.html', config=config )
+        rows =selectFildeData()
+        return render_template('sub/uploadPhoto.html', config=config ,
+                                                    items= rows)
     else:
         # 딕셔너리 구조로
         # 디비에 들어갈 데이터를 준비
@@ -135,10 +137,15 @@ def uploadPhoto():
         }
         '''
         # 3.디비 입력 처리
-        # 3-1. 성공이면 저장되었습니다. -> 리스트로 이동
-        # 3-2. 실패면 실패했습니다 -> 돌아가기
-        return "파일 업로드 처리"
-    
+        result = insertFileData( dic )
+        if result:
+            # 3-1. 성공이면 저장되었습니다. -> 리스트로 이동
+            return render_template('error.html', msg='등록성공',url=url_for('uploadPhoto') )
+        else:
+            # 3-2. 실패면 실패했습니다 -> 돌아가기
+            return render_template('error.html', msg='등록실패')
+
+
 if __name__ == '__main__':# 이코드를 메인으로 구동시 서버가동
     app.run(debug=True)
     

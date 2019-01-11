@@ -134,10 +134,64 @@ def selectOneStockInfo( code ):
         if connection:
             connection.close()
     return row
-
+# 자료실 목록 가져오기
+def selectFildeData():
+    connection = None
+    rows       = None # 주식정보들을 담는 변수
+    try:
+        connection = my.connect(host='localhost', # 디비 주소
+                            user='root',      # 디비 접속 계정
+                            password='12341234', # 디지 접속 비번
+                            db='python_db',   # 데이터베이스 이름
+                            #port=3306,        # 포트     
+                            charset='utf8',
+                            cursorclass=my.cursors.DictCursor) # 커서타입지정
+        # 쿼리수행
+        with connection.cursor() as cursor:            
+            sql    = '''
+               select * from tbl_fileBbs order by id desc limit 10;
+            '''
+            cursor.execute( sql )
+            # 여러개 데이터를 다 가져올때
+            rows    = cursor.fetchall()            
+    except Exception as e:
+        print('->', e)
+        rows = None
+    finally:
+        if connection:
+            connection.close()
+    return rows
 # 수정하기 : 코드를 이용하여 cur,rate를 변경한다
 # 변경의 성공 여부는 영향을 받은(e) row의 수가 1이상일경우 해당된다
 # stock : 타입이 dict, 키는 컬럼명을 따라간다
+def insertFileData( info ):
+    connection = None
+    result = 0 # 로그인 결과를 담는 변수
+    try:
+        connection = my.connect(host='localhost', # 디비 주소
+                            user='root',      # 디비 접속 계정
+                            password='12341234', # 디지 접속 비번
+                            db='python_db',   # 데이터베이스 이름
+                            #port=3306,        # 포트     
+                            charset='utf8',
+                            cursorclass=my.cursors.DictCursor) # 커서타입지정
+        with connection.cursor() as cursor:
+            sql    =''' insert into 
+	                        tbl_fileBbs
+                        (title, content, `author`, `files`)
+                            values
+                        (%s,%s,%s,%s);
+'''
+            cursor.execute( sql,tuple(info.values()) )
+            connection.commit()
+            result = connection.affected_rows()
+    except Exception as e:
+        print('->', e)
+        result = 0
+    finally:
+        if connection:
+            connection.close()
+    return result
 def updateStockInfo( stock ):
     connection = None
     result = None # 수정 결과
@@ -167,7 +221,6 @@ def updateStockInfo( stock ):
         if connection:
             connection.close()
     return result
-
 
 # 삭제하기
 def deleteStockInfo( code ):
@@ -216,4 +269,6 @@ if __name__ == '__main__':
     #     'code':'012330'
     # }   
     # print("성공" if updateStockInfo(dic) else '실패')
-    print (deleteStockInfo('000020'))
+    #print (deleteStockInfo('000020'))
+    print (selectFildeData())
+    pass

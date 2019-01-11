@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {# 외부 html을 포함시켜서 렌더링한다 #}
+    {% include 'mod/head.html' %}
+</head>
+<body>
+    <div id="wrapper">
+
+        <!-- Navigation -->
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+                
+                {% include 'mod/left.html' %}
+                {% include 'mod/right.html' %}
+                {% include 'mod/menu.html' %}
+            </nav>
+
+        <div id="page-wrapper">
+        {% include 'sub/index_sub.html' %}
+    </div>
+    <!-- /#wrapper -->
+    {# head. html이 없으면 a.html을 찾고,...
+        ignore missing은 템플릿 파일이 실제로 없어도 오류를 보여주지 않는다
+    #}
+    {% include ['mod/foot1.html','a.html','b.html'] ignore missing %}
+</body>
+</html>

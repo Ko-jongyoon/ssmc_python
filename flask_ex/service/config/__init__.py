@@ -7,7 +7,7 @@ class DBConfig:
     맴버변수
     '''
     DB_TEST_URL =  '127.0.0.1' # 디비 IP 
-    DB_REAL_URL =  ''          # 디비 IP 
+    DB_REAL_URL =  'pythondb.ch7clkfgazvf.ap-northeast-2.rds.amazonaws.com'          # 디비 IP 
     DB_PORT     =  3306        # 디비 포트
     DB_USER     =  'root'      # 사용자 계정 (원래 root 사용 않함)
     DB_PASSWORD =  '12341234'  # 사용자 비번

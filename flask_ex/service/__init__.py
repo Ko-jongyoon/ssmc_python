@@ -8,7 +8,7 @@ def create_app( config_path='resource/config.cfg' ):
     # 1. 환경변수설정/사용
     initConfig( app, config_path )
     # 2. 디비설정
-    # initDBHelper( app )
+    initDBHelper( app )
     DBManager.init( app )
     DBManager.init_db()
     # 3. 에러설정 (404, 500, ... 각종 오류 코드 발생시 일괄처리)

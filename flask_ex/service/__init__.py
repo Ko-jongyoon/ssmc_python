@@ -12,12 +12,16 @@ def create_app( config_path='resource/config.cfg' ):
     DBManager.init( app )
     DBManager.init_db()
     # 3. 에러설정 (404, 500, ... 각종 오류 코드 발생시 일괄처리)
-    
+    initErrorPage( app )
     # 4. 라우트설정(블루프린트)   
     initBlueprint( app )
     # 5. 요청/응답 라이프사이클처리 
     initReqRes( app )
     return app
+
+def initErrorPage( app):
+    from service.error import not_found
+    app.register_error_handler(404, not_found )
 
 def initConfig( app, config_path ):
     # 1. 환경변수설정/사용:프로그램에서 사용되는 고정된정보(디비접속정보,운용상필요한상수값)
@@ -31,7 +35,7 @@ def initConfig( app, config_path ):
     app.config.from_object( DBConfig )
 
     # 로드된 환경변수값 확인
-    #configCheck( app.config.items() )
+    # configCheck( app.config.items() )
     # TEST_URL에 해당되는 값을 출력하시오
     # 환경변수의 값은 그 의도대로 타입을 따라간다
     print( app.config['DB_PORT'] )

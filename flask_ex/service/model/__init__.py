@@ -43,7 +43,7 @@ class DBManager:
             app.config.get('DB_DATABASE'),
             app.config.get('DB_CHARSET')
         )
-        # 엔진생성
+        # 엔진생성 가져와서 그냥 쓰면된다
         DBManager.__engine  = create_engine( db_url, echo=True)
         # 세션생성
         DBManager.__session = scoped_session( sessionmaker(

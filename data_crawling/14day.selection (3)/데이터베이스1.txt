@@ -1,0 +1,219 @@
+=========================
+-- 데이터베이스 및 테이블
+=========================
+-- 마리아DB 접속
+-- mysql [-u 사용자명] [-p] [-h host] [데이터베이스]
+mysql -u root -p
+
+-- 마리아 프럼프트 : 마리아 데이터베이스에 실제 접속했으며, [디비명] 표시
+MariaDB [(none)]>
+
+-- 데이터베이스 선택 
+use pythondb;
+
+-- 서버에 있는 모든 데이터베이스 보기
+show databases;
+
+-- sql은 데이터베이스와 소통하기 위한 최적화된 언어이다. 
+
+-- 데이터베이스 생성
+-- create database <데이터베이스명>;
+create database my_db;
+-- 데이터베이스가 없을 경우 생성
+create database if not exists my_db;
+
+-- 데이터베이스 삭제 
+drop database my_db;
+drop database if exists my_db;
+
+-- 데이터베이스의 목적=>데이터 저장=>테이블=>로우+컬럼의2차원구조
+-- 로우=하나의 레코드, 레코드는 컬럼으로 구분
+-- 여러 테이블의 컬럼들이 하나 이상 관계를 가질수 있는데->관계형데이터베이스
+-- 테이블을 정의하고, 여러 테이블에 나누는 과정을 정규화라고 부른다
+
+ 
+-- 테이블 생성, 변경, 삭제
+create table 테이블명 (<칼럼 정의>);
+-- 컬럼
+<컬럼명> <데이터타입> 
+[NOT NULL | NULL]
+[DEFAULT <기본값>]
+[AUTO_INCREMENT]
+[UNIQUE [KEY] | PRIMARY KEY ]
+[COMMENT '<주석>']
+
+create table employees (
+	id int not null auto_increment primary key,
+	surname varchar(100),
+	givenname varchar(100),
+	pref_name varchar(50),
+	brithday date comment '생일'
+);
+
+-- 테이블 생성 쿼리 보기
+show create table employees;
+-- 결과에서 보이는 : ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+-- 이것은 디비가 자동으로 추가한 부분
+
+-- 테이블 구조 보기
+describe employees;
+
+-- 테이블 변경 - alter table
+alter table 테이블이름 <변경정의>[, 변경정의] ...;
+
+-- 컬럼 추가 : pref_name 컬럼 뒤에 추가
+alter table employees add username varchar(20) after pref_name;
+describe employees;
+
+-- 컬럼 변경 
+alter table employees modify pref_name varchar(30); 
+describe employees;
+
+-- 컬럼 삭제
+alter table employees drop username;
+describe employees;
+
+-- 테이블 삭제
+drop table employees;
+drop table if exists employees;
+
+=======================
+입력, 수정, 삭제
+=======================
+-- insert
+insert [into] <테이블명> [(<컬럼명>[,<컬럼명>,... ])]
+{VALUES | VALUE} ({<표현식>|default}, ...)[,(..),..];
+
+-- 테이블생성
+create table employees (
+	id int not null auto_increment primary key,
+	surname varchar(100),
+	givenname varchar(100),
+	pref_name varchar(50),
+	brithday date comment '생일'
+);
+-- 전체 컬럼 데이터 입력
+insert into employees values (NULL, 'Good', 'Miller', 'Kim', '2018-01-01');
+
+-- 2개 넣기 및 NULL로 넣기 -> 여튼 순서가 변경되면 위험한 쿼리, 번잡함
+insert into employees values 
+(NULL, 'Good2', 'Miller2', NULL, NULL),
+(NULL, 'Good3', 'Miller3', NULL, NULL);
+
+-- 일부 컬럼 입력-> 컬럼의 순서 배치도 변경 가능
+insert into employees (surname, givenname) values 
+('Good4', 'Miller4');
+
+-- 다른 테이블에서 바로 입력
+insert into employees (surname) select keyword from tbl_keyword;
+
+-- 파일에서 로드해서 입력 (탭으로 구분)
+load data infile '/Users/kenshi/Desktop/data.txt'
+into table employees (surname);
+
+
+-- 기존 데이터 변경 
+-- update
+update <테이블명> 
+set 컬럼명={표현식|Default} ...
+where <조회 조건>
+
+-- update 할때는 where 빼먹으면 큰일남
+update employees set pref_name='LEE' 
+where surname='Good' and givenname='Miller';
+
+update tbl_trade set cur=replace(cur, ',','');
+
+-- 기존 데이터 삭제
+delete from <테이블명> [where <조회조건>]
+
+delete from employees where surname='로마';
+
+
+/*
+=======================
+== 7장 데이터 조회, 필터링, 검색, 정렬, 조인, 요약
+=======================
+*/
+-- 데이터베이스에서 데이터를 가져오거나 읽기 위한 명령 select 이다
+-- 모든 데이터 조회
+select * from tbl_trade;
+
+-- 선택한 컬럼만 조회
+select code, name from tbl_trade;
+
+-- 데이터 필터링과 조회
+-- 특정 컬럼 치환
+update tbl_trade set cur=replace(cur, ',','');
+alter table tbl_trade modify cur int; 
+select * from tbl_trade where cur > 1000000;
+
+-- 논리 연산 AND
+update tbl_trade set updown=replace(updown, ',','');
+alter table tbl_trade modify updown float; 
+select * from tbl_trade where cur > 1000000 and updown>0;
+
+-- 논리 연산 OR
+select * from tbl_trade where cur > 1000000 or updown>2;
+
+-- AND 먼저 그리고 OR (우선순위)
+select * from tbl_trade where cur > 1000000 and updown>0 or updown>2;
+
+-- in (괄호로 여러개 표현할때)
+select * from tbl_trade where name='코닉글로리' or name='SK증권우';
+select * from tbl_trade where name in ('코닉글로리','SK증권우');
+
+-- 빼고 나머지
+select * from tbl_trade where name not in ('코닉글로리','SK증권우');
+
+-- 일부 정보로 찾기 like
+select * from tbl_trade where name like '삼%';
+
+-- 데이터 정렬
+select * from tbl_trade where name like '삼%' order by name ;
+select * from tbl_trade where name like '삼%' order by name desc;
+
+-- 조인, inner join, outter join, left(right) join, self join
+-- https://www.w3schools.com/sql/sql_join.asp
+select surname, pref_name, cur from tbl_trade as a
+join employees as b
+on b.pref_name=a.name;
+
+select surname, pref_name, cur  from tbl_trade as a
+inner join employees as b
+on b.pref_name=a.name;
+
+select surname, pref_name, cur  from tbl_trade as a
+left join employees as b
+on b.pref_name=a.name;
+
+select surname, pref_name, cur  from tbl_trade as a
+right join employees as b
+on b.pref_name=a.name;
+
+select surname, pref_name, cur  from employees as a
+left join tbl_trade as b
+on a.pref_name=b.name;
+
+-- 데이터 요약
+-- AVG
+select avg(cur) from tbl_trade;
+-- COUNT
+select COUNT(name) from tbl_trade;
+-- MIN
+select MIN(cur) from tbl_trade;
+-- MAX
+select MAX(cur) from tbl_trade;
+-- SUM
+select SUM(cur) from tbl_trade;
+
+-- 그룹바이
+select pref_name, count(*) from employees group by pref_name;
+
+-- 그룹바이의 필터링
+select pref_name, count(*) from employees group by pref_name 
+having count(*)>1;
+
+
+
+

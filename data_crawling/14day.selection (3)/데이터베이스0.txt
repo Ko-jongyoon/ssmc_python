@@ -1,0 +1,41 @@
+— 마리아 디비 설정 파일
+ㅡ my.ini(윈도우) or my.cnf (맥,리눅스)
+
+— 마리아 디비 접속
+>>  mysql -u root -p1234
+>>  mysql -u root -p
+>>  1234
+
+— 권한의 종류 (p74~76참고)
+1) 전체 적용 관리자 권한
+2) 데이터베이스, 테이블, 컬럼 단위 권한
+3) 기타 부가적인 권한
+
+— 사용자 생성
+-- 로컬만 접근
+>> Create user ‘guest’@’localhost’ identified by ‘1234’;
+
+— 로컬, 어떤 아이피에서도 OK
+>> Create user ‘guest2’@’%’ identified by ‘1234’;
+
+— %를 도메인의 일부 %.naver.com or IP의 일분 23.2.5.% 사용 가능
+
+— 권한 부여, 제거, 보기
+>> grant <권한> on <데이터베이스> to <사용자명>;
+>> grant all on *.* to ‘guest’@‘%’ with grant option; 
+>> *.* => 데이터베이스.테이블
+>> ‘계정’@‘접근IP’
+
+— 권한제거
+>> revoke <권한> on <데이터베이스> from <사용자명>;
+>> revoke all, grant option on *.* from ‘guest’@‘%’  
+
+— 권한보기
+>> show grants for 'guest'@'%';
+
+— 비번 변경
+>> set password for 'guest'@'%'=password('12345');
+
+— 사용자 제거
+>> drop user 'guest'@'%';
+

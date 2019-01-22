@@ -30,7 +30,7 @@ def loginSql( uid, upw ):
                 #print( sql )
                 #cursor.execute( sql )
 
-                row    = cursor.fetchone()
+                row    = cursor.fetchone()  # 하나의 row를 뽑을때
                 # {'id': 1, 'name': '멀티', 'uid': 'm', 'upw': '1', 'regdate': datetime.datetime(2019, 1, 7, 14, 14, 23)}
                 print( row )
                 print( "%s님 방갑습니다."  % row['name']  )
@@ -114,7 +114,7 @@ def selectStockByKeyword( keyword ):
 # code를 이용하여 해아 종목 정보를 모두 가져온다
 def selectOneStockInfo( code ):
     connection = None
-    row = None # 로그인 결과를 담는 변수
+    row = None 
     try:
         connection = my.connect(host='localhost', # 디비 주소
                             user='root',      # 디비 접속 계정
@@ -181,7 +181,7 @@ def insertFileData( info ):
                         (title, content, `author`, `files`)
                             values
                         (%s,%s,%s,%s);
-'''
+                    '''
             cursor.execute( sql,tuple(info.values()) )
             connection.commit()
             result = connection.affected_rows()

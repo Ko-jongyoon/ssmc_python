@@ -1,6 +1,6 @@
 ###################################################################
 # 쿼리 + 풀링
-from service.model.dbMgr import DBHelper
+from flask_ex.service.model.dbMgr import DBHelper
 
 db_session = None
 # 오직 1회만 호출되고, 디비 커넥션도 총 100개의 세션을 단 한번 세트로 구성
@@ -57,7 +57,7 @@ class DBManager:
 
     @staticmethod
     def init_db():
-        from service.model import member
+        from flask_ex.service.model import member
         # 테이블이 없으면 만들어서 처리
         Base.metadata.create_all( bind=DBManager.__engine )
 

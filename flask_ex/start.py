@@ -1,4 +1,4 @@
-from service import create_app
+from flask_ex.service import create_app
 
 # create_app()가 Flask 객체를 리턴한다
 app = create_app()

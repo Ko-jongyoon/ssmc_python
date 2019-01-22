@@ -1,10 +1,10 @@
 # 주소 : ~/users/..
 # ~/users/login, ~/users/logout, ~/users/signup
 # app라는 실체가 바뀌면(블루프린트로) 주소의 시작방식이 변경이된다
-from service.controller import bp_users as app
-from service.model import db_session
-from service.model import dao
-from service.model.member import Member
+from flask_ex.service.controller import bp_users as app
+from flask_ex.service.model import db_session
+from flask_ex.service.model import dao
+from flask_ex.service.model.member import Member
 
 # 세션 없이 갈수 있는 유일한 페이지(가정)
 # ~/users/login

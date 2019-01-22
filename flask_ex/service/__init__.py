@@ -1,5 +1,5 @@
 from flask import Flask, request, session, redirect, url_for
-from service.model import initDBHelper, DBManager
+from flask_ex.service.model import initDBHelper, DBManager
 
 def create_app( config_path='resource/config.cfg' ):
     app = Flask(__name__)
@@ -20,19 +20,19 @@ def create_app( config_path='resource/config.cfg' ):
     return app
 
 def initErrorPage( app):
-    from service.error import not_found
+    from flask_ex.service.error import not_found
     app.register_error_handler(404, not_found )
 
 def initConfig( app, config_path ):
     # 1. 환경변수설정/사용:프로그램에서 사용되는 고정된정보(디비접속정보,운용상필요한상수값)
     #    class로부터(객체), 리소스(파일), 운영체계로부터 가져올수 있다 
     # 코드에 하드코딩되어 있지 않고, 환경변수값을 읽어서 프로그램에 반영시키는방식
-    app.config.from_pyfile( config_path, silent=True )
+    app.config.from_pyfile( config_path, silent=True ) #app.config 객체안에  config_path =resource/config.cfg파일은 포함시키는 문장
     # class를 읽어서 객체로부터 환경변수를 획득한다 -> 
     # 직관성, 코드에 적용되어 있다
     # 내위치가 하위에 있다 하더라고 from을 기술할때는 풀경로를 사용한다
-    from service.config import DBConfig
-    app.config.from_object( DBConfig )
+    from flask_ex.service.config import DBConfig
+    app.config.from_object( DBConfig )  #app.config 객체안에 DBConfig 클래스를 포함시키는 문장
 
     # 로드된 환경변수값 확인
     # configCheck( app.config.items() )
@@ -45,9 +45,9 @@ def initConfig( app, config_path ):
 def initBlueprint( app ):
     # blueprint => 주제별로 페이지를 나눠서 개발이 가능 => controller
     # 회원관리:~/users/login, ~/users/logout, ~/users/signup
-    from service.controller import bp_users, bp_analysis
+    from flask_ex.service.controller import bp_users, bp_analysis
     # 해당 모듈 덩어리채로 메모리에 올라온다 -> 객체가 만들어지듯이 사용에 관계없이
-    from service.controller import user, ana
+    from flask_ex.service.controller import user, ana
     # 블루프린트를 Flask 객체에 등록
     app.register_blueprint( bp_users, url_prefix='/users' )
     # 분석관리:~/analysis/init, ~/analysis/proc, ~/analysis/sum

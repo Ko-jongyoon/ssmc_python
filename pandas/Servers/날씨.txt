@@ -1,0 +1,10 @@
+
+for location in soup.select('location'):
+    print(location.city.string)
+    print('='*30)
+    for n in soup.select('data'):
+        print('날짜: ', n.tmef.string)
+        print('날씨: ', n.wf.string)
+        print('최고: ', n.tmx.string)
+        print('최저: ', n. tmn.string)
+        print('-'*30)
